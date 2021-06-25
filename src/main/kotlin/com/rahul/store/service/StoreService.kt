@@ -21,13 +21,13 @@ class StoreService(private val storeRepository: StoreRepository) {
     fun saveStores(page: Int): List<StoreDTO> {
         val restTemplate = RestTemplateBuilder().build()
         val headers = HttpHeaders()
+        //We can use encryption or vault for apiKey
         headers.set("apiKey", "nxzAAC1EQAAU7AGY8gUQnev_99A")
         val entity = HttpEntity<String>(headers)
         val stores = restTemplate.exchange(
             "http://134.209.29.209/v1/stores/?page=$page", HttpMethod.GET,
             entity, typeReference<List<StoreDTO>>()
         ).body!!
-        println("------- ${stores.size}")
         for (store in stores) {
             storeRepository.save(store.toStore())
         }
